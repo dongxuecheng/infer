@@ -40,13 +40,13 @@ yolo::Image cvimg(const cv::Mat &image) { return yolo::Image(image.data, image.c
 void perf() {
   int max_infer_batch = 16;
   int batch = 16;
-  std::vector<cv::Mat> images{cv::imread("inference/car.jpg"), cv::imread("inference/gril.jpg"),
-                              cv::imread("inference/group.jpg")};
+  std::vector<cv::Mat> images{cv::imread("/workspace/workspace/inference/car.jpg"), cv::imread("/workspace/workspace/inference/gril.jpg"),
+                              cv::imread("/workspace/workspace/inference/group.jpg")};
 
   for (int i = images.size(); i < batch; ++i) images.push_back(images[i % 3]);
 
   cpm::Instance<yolo::BoxArray, yolo::Image, yolo::Infer> cpmi;
-  bool ok = cpmi.start([] { return yolo::load("yolov8n.transd.engine", yolo::Type::V8); },
+  bool ok = cpmi.start([] { return yolo::load("/workspace/workspace/yolov8n.transd.engine", yolo::Type::V8); },
                        max_infer_batch);
 
   if (!ok) return;
@@ -69,9 +69,9 @@ void perf() {
 }
 
 void batch_inference() {
-  std::vector<cv::Mat> images{cv::imread("inference/car.jpg"), cv::imread("inference/gril.jpg"),
-                              cv::imread("inference/group.jpg")};
-  auto yolo = yolo::load("yolov8n.transd.engine", yolo::Type::V8);
+  std::vector<cv::Mat> images{cv::imread("/workspace/workspace/inference/car.jpg"), cv::imread("/workspace/workspace/inference/gril.jpg"),
+                              cv::imread("/workspace/workspace/inference/group.jpg")};
+  auto yolo = yolo::load("/workspace/workspace/yolov8n.transd.engine", yolo::Type::V8);
   if (yolo == nullptr) return;
 
   std::vector<yolo::Image> yoloimages(images.size());
@@ -100,8 +100,8 @@ void batch_inference() {
 }
 
 void single_inference() {
-  cv::Mat image = cv::imread("inference/car.jpg");
-  auto yolo = yolo::load("yolov8n-seg.b1.transd.engine", yolo::Type::V8Seg);
+  cv::Mat image = cv::imread("/workspace/workspace/inference/car.jpg");
+  auto yolo = yolo::load("/workspace/workspace/yolov8n-seg.b1.transd.engine", yolo::Type::V8Seg);
   if (yolo == nullptr) return;
 
   auto objs = yolo->forward(cvimg(image));
@@ -133,6 +133,6 @@ void single_inference() {
 int main() {
   perf();
   batch_inference();
-  single_inference();
+  // single_inference();  // TODO: Fix segmentation model
   return 0;
 }

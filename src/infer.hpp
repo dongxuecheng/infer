@@ -19,6 +19,7 @@ class Timer {
   virtual ~Timer();
   void start(void *stream = nullptr);
   float stop(const char *prefix = "Timer", bool print = true);
+  float stop(int batch, const char *prefix = "Timer", bool print = true);
 
  private:
   void *start_, *stop_;
